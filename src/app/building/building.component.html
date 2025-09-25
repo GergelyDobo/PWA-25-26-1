@@ -1,0 +1,9 @@
+@if(building) {
+  <h2>{{ building.name }}</h2>
+  <p>Amount: {{ building.amount }}</p>
+  <p>{{ building.income }}$/sec</p>
+  <button (click)="buy()"
+    [disabled]="money < building.cost">
+    {{ building.cost }}$
+  </button>
+}
