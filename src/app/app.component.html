@@ -1,4 +1,4 @@
-<p>{{ money }}$<p>
+<p>{{ money | formatMoney }}<p>
 <div class="container">
   @for(b of buildings; track $index) {
     <app-building [building]="b"

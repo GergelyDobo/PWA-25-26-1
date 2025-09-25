@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BuildingComponent } from './building/building.component';
 import { ManagementService } from './management.service';
+import { FormatMoneyPipe } from './format-money.pipe';
 
 export interface Building {
   name: string;
@@ -12,7 +13,8 @@ export interface Building {
 @Component({
   selector: 'app-root',
   imports: [
-    BuildingComponent
+    BuildingComponent,
+    FormatMoneyPipe
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

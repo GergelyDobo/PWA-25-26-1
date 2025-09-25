@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Building } from '../app.component';
+import { FormatMoneyPipe } from '../format-money.pipe';
 
 @Component({
   selector: 'app-building',
+  imports: [FormatMoneyPipe],
   templateUrl: './building.component.html',
   styleUrl: './building.component.scss'
 })
