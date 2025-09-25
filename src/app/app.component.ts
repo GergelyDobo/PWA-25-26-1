@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BuildingComponent } from './building/building.component';
+import { ManagementService } from './management.service';
 
 export interface Building {
   name: string;
@@ -34,14 +35,10 @@ export class AppComponent {
     }
   ];
 
+  constructor(private managementService: ManagementService) {}
+
   public createBuilding() {
-    const name = window.prompt("Type the name of the new building here!") ?? "unnamed";
-    const building: Building = {
-      name,
-      income: 10,
-      cost: 100,
-      amount: 0
-    };
+    const building = this.managementService.createBuilding();
     this.buildings.push(building);
   }
 }
