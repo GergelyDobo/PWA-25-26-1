@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { BuildingComponent } from './building/building.component';
 import { ManagementService } from './management.service';
 import { FormatMoneyPipe } from './format-money.pipe';
+import { ClickToEarnDirective } from './click-to-earn.directive';
 
 export interface Building {
   name: string;
@@ -14,7 +15,8 @@ export interface Building {
   selector: 'app-root',
   imports: [
     BuildingComponent,
-    FormatMoneyPipe
+    FormatMoneyPipe,
+    ClickToEarnDirective
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -42,5 +44,9 @@ export class AppComponent {
   public createBuilding() {
     const building = this.managementService.createBuilding();
     this.buildings.push(building);
+  }
+
+  public onEarn(value: number) {
+    this.money += value;
   }
 }
