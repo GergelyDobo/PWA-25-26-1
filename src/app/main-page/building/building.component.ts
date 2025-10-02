@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormatMoneyPipe } from '../shared/format-money.pipe';
-import { Building } from '../shared/building';
+import { Building } from '../../shared/building';
+import { FormatMoneyPipe } from '../../shared/format-money.pipe';
 
 @Component({
   selector: 'app-building',

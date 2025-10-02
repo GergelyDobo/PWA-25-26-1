@@ -1,12 +1,1 @@
-<p>{{ money | formatMoney }}<p>
-  <img appClickToEarn
-    (earn)="onEarn($event)"
-    src="https://picsum.photos/100"
-    alt="image">
-<div class="container">
-  @for(b of buildings; track $index) {
-    <app-building [building]="b"
-      [(money)]="money"></app-building>
-  }
-</div>
-<button (click)="createBuilding()">Create building</button>
+<app-main-page></app-main-page>
