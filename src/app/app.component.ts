@@ -1,15 +1,9 @@
 import { Component } from '@angular/core';
 import { BuildingComponent } from './building/building.component';
-import { ManagementService } from './management.service';
-import { FormatMoneyPipe } from './format-money.pipe';
-import { ClickToEarnDirective } from './click-to-earn.directive';
-
-export interface Building {
-  name: string;
-  income: number;
-  cost: number;
-  amount: number;
-}
+import { ManagementService } from './shared/management.service';
+import { FormatMoneyPipe } from './shared/format-money.pipe';
+import { ClickToEarnDirective } from './shared/click-to-earn.directive';
+import { Building } from './shared/building';
 
 @Component({
   selector: 'app-root',
