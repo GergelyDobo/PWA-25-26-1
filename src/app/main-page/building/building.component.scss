@@ -1,0 +1,37 @@
+:host {
+  grid-row: span 4;
+  display: grid;
+  grid-template-rows: subgrid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid black;
+  border-radius: 2rem;
+  background-color: rgb(255, 225, 136);
+}
+
+h2 {
+  margin-top: 0;
+  text-align: center;
+  text-wrap: balance;
+  word-break: break-word;
+}
+
+p {
+  margin: 0;
+}
+
+.buttons-container {
+  justify-self: stretch;
+  height: 1.75rem;
+  display: flex;
+  gap: 0.1rem;
+
+  button {
+    min-width: fit-content;
+  }
+
+  button.buy {
+    flex: 1 80%;
+  }
+}

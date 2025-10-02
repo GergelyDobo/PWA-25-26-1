@@ -1,9 +1,12 @@
 @if(building) {
-    <h2>{{ building.name }}</h2>
-    <p>Amount: {{ building.amount }}</p>
-    <p>{{ building.income | formatMoney }}/sec</p>
-    <button (click)="buy()"
-        [disabled]="money < building.cost">
-        {{ building.cost | formatMoney }}
+  <h2>{{ building.name }}</h2>
+  <p>Amount: {{ building.amount }}</p>
+  <p>{{ building.income | formatMoney }}/sec</p>
+  <div class="buttons-container">
+    <button class="buy"
+      [disabled]="money < building.cost"
+      (click)="buy()">
+      {{ building.cost | formatMoney }}
     </button>
+  </div>
 }

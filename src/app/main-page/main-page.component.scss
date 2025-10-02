@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+#money-display {
+  font-size: 2.25rem;
+  font-weight: 400;
+}
+
+img {
+  height: 100px;
+}
+
+.buildings-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+button.create {
+  display: block;
+  margin: 2rem auto 0;
+  width: max(20%, 10rem);
+  height: 2rem;
+  font-size: 1.25rem;
+}
