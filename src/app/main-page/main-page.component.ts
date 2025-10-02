@@ -17,27 +17,16 @@ import { BuildingComponent } from './building/building.component';
 })
 export class MainPageComponent {
   public money = 10;
+  public readonly buildings: Building[];
 
-  public readonly buildings: Building[] = [
-    {
-      name: "Irinyi",
-      income: 1,
-      cost: 10,
-      amount: 1
-    },
-    {
-      name: "Bolyai",
-      income: 3,
-      cost: 50,
-      amount: 0
-    }
-  ];
-
-  constructor(private managementService: ManagementService) {}
+  constructor(
+    private managementService: ManagementService
+  ) {
+    this.buildings = this.managementService.buildings;
+  }
 
   public createBuilding() {
-    const building = this.managementService.createBuilding();
-    this.buildings.push(building);
+    this.managementService.createBuilding();
   }
 
   public onEarn(value: number) {
