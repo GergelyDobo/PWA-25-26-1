@@ -20,16 +20,11 @@ export class ManagementService {
     }
   ];
 
-  public createBuilding(): boolean {
-    const name = window.prompt("Type the name of the new building here!");
-    if(name === null || name.trim().length === 0) {
-      return false;
-    }
-
+  public createBuilding(name: string, income: number, price: number): boolean {
     const building: Building = {
       name,
-      income: 10,
-      cost: 100,
+      income,
+      cost: price,
       amount: 0
     };
 

@@ -4,6 +4,7 @@ import { ManagementService } from '../shared/management.service';
 import { ClickToEarnDirective } from '../shared/click-to-earn.directive';
 import { FormatMoneyPipe } from '../shared/format-money.pipe';
 import { BuildingComponent } from './building/building.component';
+import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 
 @Component({
@@ -22,13 +23,14 @@ export class MainPageComponent {
   public readonly buildings: Building[];
 
   constructor(
-    private managementService: ManagementService
+    private managementService: ManagementService,
+    private router: Router
   ) {
     this.buildings = this.managementService.buildings;
   }
 
   public createBuilding() {
-    this.managementService.createBuilding();
+    this.router.navigateByUrl("shop");
   }
 
   public onEarn(value: number) {

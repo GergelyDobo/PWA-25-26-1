@@ -10,4 +10,5 @@
   }
 </div>
 <button mat-flat-button class="create"
+  [disabled]="buildings.length >= 5"
   (click)="createBuilding()">Create building</button>
