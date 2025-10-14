@@ -1,16 +1,18 @@
-<h2>Building Shop</h2>
-<form [formGroup]="buildingForm">
+<div class="form-container">
+  <h2>Building Shop</h2>
+  <form [formGroup]="buildingForm">
     <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput type="text" formControlName="name">
+      <mat-label>Name</mat-label>
+      <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <mat-form-field>
-        <mat-label>Income</mat-label>
-        <input matInput type="number" formControlName="income">
+      <mat-label>Income</mat-label>
+      <input matInput type="number" formControlName="income" />
     </mat-form-field>
     <mat-form-field>
-        <mat-label>Price</mat-label>
-        <input matInput type="number" formControlName="price">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" />
     </mat-form-field>
     <button mat-flat-button (click)="onSubmit()">Create!</button>
-</form>
+  </form>
+</div>
