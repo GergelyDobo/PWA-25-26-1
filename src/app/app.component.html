@@ -1,1 +1,24 @@
-<router-outlet></router-outlet>
+<mat-toolbar class="toolbar">
+  <span>Clicker Game</span>
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-drawer-container>
+  <mat-drawer #drawer position="end">
+    <mat-list>
+      <mat-list-item class="list-item" routerLink="/main">Main</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item class="list-item" (click)="createBuilding()"
+        >New building</mat-list-item
+      >
+      <mat-divider></mat-divider>
+      <mat-list-item class="list-item" (click)="openSettings()"
+        >Settings</mat-list-item
+      >
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

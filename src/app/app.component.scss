@@ -1,0 +1,19 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #8b8b8b;
+}
+
+.mat-drawer-container {
+  background-color: #ffffcf;
+  height: calc(100% - 64px);
+  color: unset;
+}
+
+.list-item {
+  cursor: pointer !important;
+
+  &:hover {
+    background-color: #666;
+  }
+}
