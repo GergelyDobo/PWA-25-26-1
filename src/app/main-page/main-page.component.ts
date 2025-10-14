@@ -13,10 +13,10 @@ import { MatButton } from '@angular/material/button';
     BuildingComponent,
     FormatMoneyPipe,
     ClickToEarnDirective,
-    MatButton
+    MatButton,
   ],
   templateUrl: './main-page.component.html',
-  styleUrl: './main-page.component.scss'
+  styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
   public money = 10;
@@ -30,10 +30,20 @@ export class MainPageComponent {
   }
 
   public createBuilding() {
-    this.router.navigateByUrl("shop");
+    this.router.navigateByUrl('shop');
   }
 
   public onEarn(value: number) {
     this.money += value;
+  }
+
+  public onDeleteBuilding(event: { building: Building; amount: number }) {
+    this.deleteBuilding(event.building, event.amount);
+  }
+
+  public deleteBuilding(building: Building, amount: number) {
+    if (building && amount === 0) {
+      this.managementService.deleteBuilding(building);
+    }
   }
 }

@@ -1,14 +1,27 @@
-<p id="money-display">{{ money | formatMoney }}<p>
-<img appClickToEarn
-  src="images/click.png"
-  alt="image"
-  (earn)="onEarn($event)">
+<p id="money-display">{{ money | formatMoney }}</p>
+<p>
+  <img
+    appClickToEarn
+    src="images/click.png"
+    alt="image"
+    (earn)="onEarn($event)"
+  />
+</p>
+
 <div class="buildings-container">
   @for(b of buildings; track $index){
-    <app-building [building]="b"
-      [(money)]="money"></app-building>
+  <app-building
+    [building]="b"
+    [(money)]="money"
+    (deleteBuilding)="onDeleteBuilding($event)"
+  ></app-building>
   }
 </div>
-<button mat-flat-button class="create"
+<button
+  mat-flat-button
+  class="create"
   [disabled]="buildings.length >= 5"
-  (click)="createBuilding()">Create building</button>
+  (click)="createBuilding()"
+>
+  Create building
+</button>
