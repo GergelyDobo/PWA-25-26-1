@@ -1,0 +1,14 @@
+<h2>Settings</h2>
+<mat-form-field>
+  <mat-label>Currency</mat-label>
+  <mat-select
+    [value]="selectedCurrencyCode"
+    (selectionChange)="onCurrencySelect($event)"
+  >
+    @for(currency of currencies; track $index){
+    <mat-option [value]="currency.code"> {{ currency.name }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<button mat-flat-button (click)="backToMain()">Back</button>
