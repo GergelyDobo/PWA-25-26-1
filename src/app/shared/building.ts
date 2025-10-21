@@ -3,4 +3,5 @@ export interface Building {
   income: number;
   cost: number;
   amount: number;
+  id?: number;
 }

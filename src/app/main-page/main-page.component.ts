@@ -43,7 +43,7 @@ export class MainPageComponent {
 
   public deleteBuilding(building: Building, amount: number) {
     if (building && amount === 0) {
-      this.managementService.deleteBuilding(building);
+      this.managementService.deleteBuilding(building?.id ?? 0);
     }
   }
 }
