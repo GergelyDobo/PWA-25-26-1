@@ -18,7 +18,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/pwa-25-26-1",
+            "outputPath":{
+              "base": "dist/clicker-game",
+              "browser": ""
+            } ,
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -52,7 +55,8 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "serviceWorker": "ngsw-config.json"
             },
             "development": {
               "optimization": false,
