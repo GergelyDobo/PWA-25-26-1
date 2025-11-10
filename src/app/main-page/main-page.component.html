@@ -17,6 +17,14 @@
   ></app-building>
   }
 </div>
+
+<div class="box-container">
+  @if( box$ | async; as box ){
+    <app-box [box]="box" (sellBox)="sellBox(box.price)"></app-box>
+  }
+</div>
+
+
 <button
   mat-flat-button
   class="create"
@@ -24,4 +32,13 @@
   (click)="createBuilding()"
 >
   Create building
+</button>
+
+<button
+  mat-flat-button
+  color="accent"
+  class="buy"
+  (click)="buyBox()"
+>
+  Buy mystery box ({{ boxPrice | formatMoney }})
 </button>

@@ -1,0 +1,22 @@
+:host {
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 1rem;
+    position: relative;
+    background-color: white;
+
+    & > :not(button) {
+        width: fit-content;
+    }
+}
+
+img {
+    aspect-ratio: 1;
+    max-width: 200px;
+    float: right;
+}
+
+button {
+    width: 100%;
+}
+

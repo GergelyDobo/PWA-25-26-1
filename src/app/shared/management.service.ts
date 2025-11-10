@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Box } from '../main-page/box/box';
 import { Building } from './building';
 
 @Injectable({
@@ -9,8 +11,18 @@ export class ManagementService {
   private readonly objectStoreName = 'buildings';
   public readonly buildings: Building[] = [];
 
+  public box$: Observable<Box | undefined> = of(undefined);
+
   constructor() {
     this.initIndexedDB();
+  }
+
+  public buyBox(): void{
+    // TODO
+  }
+
+  public sellBox():void{
+    // TODO
   }
 
   public createBuilding(name: string, income: number, price: number): boolean {

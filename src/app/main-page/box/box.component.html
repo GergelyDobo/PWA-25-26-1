@@ -1,0 +1,7 @@
+<img [src]="box.image">
+<h3>{{ box.title }}</h3>
+<p>{{ box.category }}</p>
+<p>{{ box.price| formatMoney }}</p>
+<button mat-flat-button
+  (click)="sellBox.emit()">Sell ({{ box.price | formatMoney }})</button>
+
