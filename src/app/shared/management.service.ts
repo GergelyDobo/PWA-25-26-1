@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay, take } from 'rxjs';
 import { Box } from '../main-page/box/box';
 import { Building } from './building';
 
@@ -11,18 +12,42 @@ export class ManagementService {
   private readonly objectStoreName = 'buildings';
   public readonly buildings: Building[] = [];
 
-  public box$: Observable<Box | undefined> = of(undefined);
+  private boxes$: Observable<Box[]>;
+  /** Subject, ami tárolja az aktuális Box objektumot, típusát generikusan megadhatjuk, a | operátorral tudunk union type-ot definiálni */
+  private boxSubject$ = new BehaviorSubject<Box | undefined>(undefined);
+  /** Publikus Observable, amit kifelé elérhetővé teszünk, ez módosítani már nem tudjuk a Subjecthez eltérően */
+  public box$: Observable<Box | undefined> = this.boxSubject$.asObservable();
 
-  constructor() {
+  /** HttpClient segít abban, hogy egyszerűen tudjuk lekérdezéseket indítani egy adott API felé, fontos provide-olni a provideHttpClient()-ot hozzá */
+  constructor(private readonly http: HttpClient) {
     this.initIndexedDB();
+
+    // Http lekérés, az tömböt bejárva Box objektumokat készítünk random price-al
+    this.boxes$ = this.http.get<Box[]>('https://fakestoreapi.com/products').pipe(
+      map((response) =>{
+        return response.map(product => ({...product, price: Math.floor(Math.random() * 9)+2} as Box));
+      }),
+      // Ha nem használjuk a shareReplay-t megnézhetjük a devtools network tab-ján, hogy a request minden click-nél kimegy,
+      // Ennek használatával megosztjuk (cacheelve lesz) és visszajátszuk a response értékét, így csak 1x fog a request kimenni
+      shareReplay(1) // Meogsztjuk + visszajátszatjuk a korábbi (1) emission értékét, a korai felírazkozás miatt
+    );
   }
 
-  public buyBox(): void{
-    // TODO
+  public buyBox(): void {
+    // Async módon random egy Box objektumot kiveszünk a tömbből
+    this.boxes$.pipe(
+      map(boxes => {
+        const index = Math.floor(Math.random() * boxes.length);
+        return boxes[index];
+      }),
+      take(1) // Segítségével az adatfolyamból 1 elemet veszünk ki, ezzel véget ér az adatfolyam (complete)
+      // a példa kedvéért illetve, hogy gyakoroljuk a subjecteket itt íratkozunk fel és az adatfolyamba egy értéket adunk át
+      // FONTOS! Legtöbb esetben nincs szükség a manuális subscriptionra, a best practise, hogy a html templatebe íratkozunk fel
+    ).subscribe(product => this.boxSubject$.next(product)); // Az adat elkészültével a subjectbe mentjük
   }
 
-  public sellBox():void{
-    // TODO
+  public sellBox(): void {
+    this.boxSubject$.next(undefined);
   }
 
   public createBuilding(name: string, income: number, price: number): boolean {
@@ -34,7 +59,9 @@ export class ManagementService {
     };
 
     // Object store tranzakció létrehozása és object store lekérése
-    const objectStore = this.db.transaction(this.objectStoreName, 'readwrite').objectStore(this.objectStoreName);
+    const objectStore = this.db
+      .transaction(this.objectStoreName, 'readwrite')
+      .objectStore(this.objectStoreName);
     const request = objectStore.add(building); // "add" request létrehozása
 
     // Sikeres request lekezelése
@@ -57,12 +84,14 @@ export class ManagementService {
 
   public deleteBuilding(id: number): void {
     // Object store tranzakció létrehozása és object store lekérése
-    const objectStore = this.db.transaction(this.objectStoreName, 'readwrite').objectStore(this.objectStoreName);
+    const objectStore = this.db
+      .transaction(this.objectStoreName, 'readwrite')
+      .objectStore(this.objectStoreName);
     const request = objectStore.delete(id); // "delete" request létrehozása
 
     // Sikeres request lekezelése
     request.onsuccess = () => {
-      const index = this.buildings.findIndex(b => b.id === id);
+      const index = this.buildings.findIndex((b) => b.id === id);
 
       if (index !== -1) {
         this.buildings.splice(index, 1); // Memóriában tárolt épület törlése
@@ -78,13 +107,17 @@ export class ManagementService {
   // Jelenleg nincs használva
   public editBuilding(editedBuilding: Building): void {
     // Object store tranzakció létrehozása és object store lekérése
-    const objectStore = this.db.transaction(this.objectStoreName, 'readwrite').objectStore(this.objectStoreName);
+    const objectStore = this.db
+      .transaction(this.objectStoreName, 'readwrite')
+      .objectStore(this.objectStoreName);
     const request = objectStore.put(editedBuilding); // "put" request létrehozása
 
     // Sikeres request lekezelése
     request.onsuccess = (event: any) => {
       const id = event.target.result; // A "result" a módosított épület ID-ja lesz
-      const buildingIndex = this.buildings.findIndex(building => building.id === id);
+      const buildingIndex = this.buildings.findIndex(
+        (building) => building.id === id
+      );
 
       if (buildingIndex !== -1) {
         this.buildings[buildingIndex] = editedBuilding; // Memóriában tárolt épület módosítása
@@ -117,7 +150,10 @@ export class ManagementService {
       const db: IDBDatabase = event.target.result;
 
       // Object store létrehozása
-      const objectStore = db.createObjectStore(this.objectStoreName, { keyPath: 'id', autoIncrement: true });
+      const objectStore = db.createObjectStore(this.objectStoreName, {
+        keyPath: 'id',
+        autoIncrement: true,
+      });
 
       // Adatbázis index létrehozása a hatékonyabb működés érdekében
       objectStore.createIndex('nameIndex', 'name', { unique: true });
@@ -132,7 +168,9 @@ export class ManagementService {
 
   private loadBuildings(): void {
     // Object store tranzakció létrehozása és object store lekérése
-    const objectStore = this.db.transaction(this.objectStoreName).objectStore(this.objectStoreName);
+    const objectStore = this.db
+      .transaction(this.objectStoreName)
+      .objectStore(this.objectStoreName);
 
     // Adatbázisban tárolt objektumok bejárása kurzor segítségével
     // Itt lehet opcionálisan további feltételeket definiálni (az SQL "WHERE"-hez hasonlóan)
