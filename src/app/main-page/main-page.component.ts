@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { BoxService } from '../shared/box.service';
 import { Building } from '../shared/building';
 import { ClickToEarnDirective } from '../shared/click-to-earn.directive';
 import { FormatMoneyPipe } from '../shared/format-money.pipe';
@@ -32,19 +33,20 @@ export class MainPageComponent {
 
   constructor(
     private managementService: ManagementService,
+    private boxService: BoxService,
     private router: Router
   ) {
     this.buildings = this.managementService.buildings;
-    this.box$ = this.managementService.box$;
+    this.box$ = this.boxService.box$;
   }
 
     public buyBox():void{
-    this.managementService.buyBox();
+    this.boxService.buyBox();
     this.money -= this.boxPrice;
   }
 
   public sellBox(price: number):void{
-    this.managementService.sellBox();
+    this.boxService.sellBox();
     this.money += price;
   }
 
