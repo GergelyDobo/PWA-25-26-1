@@ -1,4 +1,5 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -31,6 +32,7 @@ import { interval } from 'rxjs';
 export class AppComponent implements OnInit, OnDestroy{
   private router = inject(Router);
   private swUpdate = inject(SwUpdate);
+  private destroyRef = inject(DestroyRef);
 
   /* Callback-ek, melyeket a listener meghív, ha az adott esemény bekövekezik */
   private onlineCallback = ()=> console.log("online");
@@ -41,7 +43,7 @@ export class AppComponent implements OnInit, OnDestroy{
      * 3000 ms-enként megnézzzük, hogy van-e új verzió a service workerből
      * ha van, akkor jelezzük a felhasználónak, majd újra töltjük az oldalt
      */
-    interval(3000).subscribe(() => {
+    interval(3000).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
     this.swUpdate.checkForUpdate().then(
       update => {
         if(update){
