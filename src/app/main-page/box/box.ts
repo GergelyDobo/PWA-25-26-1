@@ -1,5 +1,5 @@
 export interface Box{
-  id: number,
+  id: string,
   title:string,
   category: string;
   image: string

@@ -29,7 +29,7 @@ export class MainPageComponent {
   public money = 10;
   public boxPrice = 5;
   public readonly buildings: Building[];
-  protected box$: Observable<Box | undefined>;
+  protected selectedBoxes$: Observable<Box[]>;
 
   constructor(
     private managementService: ManagementService,
@@ -37,7 +37,7 @@ export class MainPageComponent {
     private router: Router
   ) {
     this.buildings = this.managementService.buildings;
-    this.box$ = this.boxService.box$;
+    this.selectedBoxes$ = this.boxService.selectedBoxes$;
   }
 
     public buyBox():void{
@@ -45,8 +45,8 @@ export class MainPageComponent {
     this.money -= this.boxPrice;
   }
 
-  public sellBox(price: number):void{
-    this.boxService.sellBox();
+  public sellBox(price: number, id: string):void{
+    this.boxService.sellBox(id);
     this.money += price;
   }
 

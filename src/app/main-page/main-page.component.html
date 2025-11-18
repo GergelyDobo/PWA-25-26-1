@@ -19,8 +19,8 @@
 </div>
 
 <div class="box-container">
-  @if( box$ | async; as box ){
-    <app-box [box]="box" (sellBox)="sellBox(box.price)"></app-box>
+  @for(box of selectedBoxes$ | async; track box.id){
+    <app-box [box]="box" (sellBox)="sellBox(box.price, box.id)"></app-box>
   }
 </div>
 

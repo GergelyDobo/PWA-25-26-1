@@ -1,6 +1,6 @@
 {
   "name": "clicker-game",
-  "short_name": "PWA-25-26-1",
+  "short_name": "pwa-25-26-1",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
