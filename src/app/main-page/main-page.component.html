@@ -8,13 +8,15 @@
   />
 </p>
 
+@let buildings = (buildings$ | async) ?? [];
+
 <div class="buildings-container">
   @for(b of buildings; track $index){
-  <app-building
-    [building]="b"
-    [(money)]="money"
-    (deleteBuilding)="onDeleteBuilding($event)"
-  ></app-building>
+    <app-building
+      [building]="b"
+      [(money)]="money"
+      (deleteBuilding)="onDeleteBuilding($event)"
+    ></app-building>
   }
 </div>
 

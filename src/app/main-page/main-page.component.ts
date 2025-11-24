@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -24,11 +24,12 @@ import { BuildingComponent } from './building/building.component';
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainPageComponent {
   public boxPrice = 5;
   public money: number;
-  public readonly buildings: Building[];
+  public readonly buildings$: Observable<Building[]>;
   protected selectedBoxes$: Observable<Box[]>;
 
   constructor(
@@ -36,7 +37,7 @@ export class MainPageComponent {
     private boxService: BoxService,
     private router: Router
   ) {
-    this.buildings = this.managementService.buildings;
+    this.buildings$ = this.managementService.buildings$;
     this.money = this.managementService.money;
     this.selectedBoxes$ = this.boxService.selectedBoxes$;
   }

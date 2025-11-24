@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Building } from './building';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -7,8 +8,9 @@ import { Building } from './building';
 export class ManagementService {
   private db!: IDBDatabase;
   private readonly objectStoreName = 'buildings';
-  public readonly buildings: Building[] = [];
   public money = 10;
+  private readonly buildings: Building[] = [];
+  private readonly buildingsChange$ = new BehaviorSubject(this.buildings);
 
   constructor() {
     this.initIndexedDB();
@@ -36,6 +38,7 @@ export class ManagementService {
       };
 
       this.buildings.push(newBuilding);
+      this.syncBuildings();
     };
 
     // Request error lekezelése
@@ -59,6 +62,7 @@ export class ManagementService {
 
       if (index !== -1) {
         this.buildings.splice(index, 1); // Memóriában tárolt épület törlése
+        this.syncBuildings();
       }
     };
 
@@ -85,6 +89,7 @@ export class ManagementService {
 
       if (buildingIndex !== -1) {
         this.buildings[buildingIndex] = editedBuilding; // Memóriában tárolt épület módosítása
+        this.syncBuildings();
       }
     };
 
@@ -98,6 +103,10 @@ export class ManagementService {
     const hasAnyBuilding = this.buildings.some((b) => b.amount > 0);
     const canAfford = this.buildings.some((b) => this.money >= b.cost);
     return !hasAnyBuilding && !canAfford;
+  }
+
+  public get buildings$(): Observable<Building[]> {
+    return this.buildingsChange$.asObservable();
   }
 
   private initIndexedDB(): void {
@@ -145,7 +154,13 @@ export class ManagementService {
         this.buildings.push(cursor.value);
 
         cursor.continue(); // Következő elemre lépés
+      } else {
+        this.syncBuildings();
       }
     };
+  }
+
+  private syncBuildings(): void {
+    this.buildingsChange$.next([...this.buildings]);
   }
 }
