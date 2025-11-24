@@ -26,8 +26,8 @@ import { BuildingComponent } from './building/building.component';
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  public money = 10;
   public boxPrice = 5;
+  public money: number;
   public readonly buildings: Building[];
   protected selectedBoxes$: Observable<Box[]>;
 
@@ -37,17 +37,18 @@ export class MainPageComponent {
     private router: Router
   ) {
     this.buildings = this.managementService.buildings;
+    this.money = this.managementService.money;
     this.selectedBoxes$ = this.boxService.selectedBoxes$;
   }
 
-    public buyBox():void{
+  public buyBox():void{
     this.boxService.buyBox();
-    this.money -= this.boxPrice;
+    this.onSpend(this.boxPrice);
   }
 
   public sellBox(price: number, id: string):void{
     this.boxService.sellBox(id);
-    this.money += price;
+    this.onEarn(price);
   }
 
   public createBuilding() {
@@ -56,6 +57,12 @@ export class MainPageComponent {
 
   public onEarn(value: number) {
     this.money += value;
+    this.managementService.money = this.money;
+  }
+
+  public onSpend(value: number) {
+    this.money -= value;
+    this.managementService.money = this.money;
   }
 
   public onDeleteBuilding(event: { building: Building; amount: number }) {

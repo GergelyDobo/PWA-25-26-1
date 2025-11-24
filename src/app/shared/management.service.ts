@@ -8,6 +8,7 @@ export class ManagementService {
   private db!: IDBDatabase;
   private readonly objectStoreName = 'buildings';
   public readonly buildings: Building[] = [];
+  public money = 10;
 
   constructor() {
     this.initIndexedDB();
@@ -93,9 +94,9 @@ export class ManagementService {
     };
   }
 
-  public checkGameOver(money: number): boolean {
+  public checkGameOver(): boolean {
     const hasAnyBuilding = this.buildings.some((b) => b.amount > 0);
-    const canAfford = this.buildings.some((b) => money >= b.cost);
+    const canAfford = this.buildings.some((b) => this.money >= b.cost);
     return !hasAnyBuilding && !canAfford;
   }
 

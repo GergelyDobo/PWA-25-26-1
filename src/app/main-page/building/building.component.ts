@@ -53,7 +53,7 @@ export class BuildingComponent {
   }
 
   private checkGameOver() {
-    if (this.managementService.checkGameOver(this.money)) {
+    if (this.managementService.checkGameOver()) {
       alert(
         'Game Over! You have no buildings and not enough money to buy one.'
       );
