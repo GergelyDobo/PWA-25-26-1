@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Building } from './building';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class ManagementService {
   private db!: IDBDatabase;
   private readonly objectStoreName = 'buildings';
-  public money = 10;
+  public readonly money = signal(10);
   private readonly buildings: Building[] = [];
   private readonly buildingsChange$ = new BehaviorSubject(this.buildings);
 
@@ -101,7 +101,7 @@ export class ManagementService {
 
   public checkGameOver(): boolean {
     const hasAnyBuilding = this.buildings.some((b) => b.amount > 0);
-    const canAfford = this.buildings.some((b) => this.money >= b.cost);
+    const canAfford = this.buildings.some((b) => this.money() >= b.cost);
     return !hasAnyBuilding && !canAfford;
   }
 

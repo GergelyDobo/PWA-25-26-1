@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, inject, input, model, output } from '@angular/core';
 import { Building } from '../../shared/building';
 import { FormatMoneyPipe } from '../../shared/format-money.pipe';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,10 +12,9 @@ import { ManagementService } from '../../shared/management.service';
   styleUrl: './building.component.scss',
 })
 export class BuildingComponent {
-  @Input() public building?: Building;
-  @Input() public money = 0;
-  @Output() public moneyChange = new EventEmitter<number>();
-  @Output() public readonly deleteBuilding = new EventEmitter<{
+  public readonly building = input.required<Building>();
+  public readonly money = model(0);
+  public readonly deleteBuilding = output<{
     building: Building;
     amount: number;
   }>();
@@ -25,27 +24,25 @@ export class BuildingComponent {
   constructor() {
     setInterval(() => {
       if (this.building) {
-        this.moneyChange.emit(
-          this.money + this.building.income * this.building.amount
-        );
+        this.money.update(value => value + this.building().income * this.building().amount);
       }
     }, 1000);
   }
 
   public buy() {
-    if (this.building && this.money >= this.building.cost) {
-      this.building.amount++;
-      this.moneyChange.emit(this.money - this.building.cost);
+    if (this.building && this.money() >= this.building().cost) {
+      this.building().amount++;
+      this.money.update(value => value - this.building().cost)
     }
   }
 
   public onDelete() {
     if (this.building) {
-      this.building.amount--;
-      if (this.building.amount === 0) {
+      this.building().amount--;
+      if (this.building().amount === 0) {
         this.deleteBuilding.emit({
-          building: this.building,
-          amount: this.building.amount,
+          building: this.building(),
+          amount: this.building().amount,
         });
         this.checkGameOver();
       }

@@ -1,18 +1,16 @@
-@if(building) {
-<h2>{{ building.name }}</h2>
-<p>Amount: {{ building.amount }}</p>
-<p>{{ building.income | formatMoney }}/sec</p>
+<h2>{{ building().name }}</h2>
+<p>Amount: {{ building().amount }}</p>
+<p>{{ building().income | formatMoney }}/sec</p>
 <div class="buttons-container">
   <button
     mat-raised-button
     class="buy"
-    [disabled]="money < building.cost"
+    [disabled]="money() < building().cost"
     (click)="buy()"
   >
-    {{ building.cost | formatMoney }}
+    {{ building().cost | formatMoney }}
   </button>
-  <button mat-icon-button [disabled]="building.amount < 1" (click)="onDelete()">
+  <button mat-icon-button [disabled]="building().amount < 1" (click)="onDelete()">
     <mat-icon>close</mat-icon>
   </button>
 </div>
-}

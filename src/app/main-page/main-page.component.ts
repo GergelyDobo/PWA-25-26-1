@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, linkedSignal, signal, Signal, WritableSignal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -11,6 +11,7 @@ import { ManagementService } from '../shared/management.service';
 import { Box } from './box/box';
 import { BoxComponent } from './box/box.component';
 import { BuildingComponent } from './building/building.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-main-page',
@@ -27,9 +28,13 @@ import { BuildingComponent } from './building/building.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainPageComponent {
+  private readonly moneyToWin = 1_000_000;
+
   public boxPrice = 5;
-  public money: number;
-  public readonly buildings$: Observable<Building[]>;
+  public money: WritableSignal<number>;
+  public moneyLeft = computed(() => Math.max(0, this.moneyToWin - this.money()));
+  public readonly buildings: Signal<Building[]>;
+  public readonly moneyWithTheseBuildings: WritableSignal<number>;
   protected selectedBoxes$: Observable<Box[]>;
 
   constructor(
@@ -37,9 +42,30 @@ export class MainPageComponent {
     private boxService: BoxService,
     private router: Router
   ) {
-    this.buildings$ = this.managementService.buildings$;
+    this.buildings = toSignal(this.managementService.buildings$, { initialValue: [] });
     this.money = this.managementService.money;
     this.selectedBoxes$ = this.boxService.selectedBoxes$;
+    this.moneyWithTheseBuildings = linkedSignal({
+      source: this.buildings,
+      computation: () => 0
+    });
+
+    let alreadyWon = false;
+    effect(() => {
+      if(this.moneyLeft() <= 0 && !alreadyWon) {
+        alreadyWon = true;
+        window.alert("VICTORY!");
+      }
+    });
+
+    let previousMoney = this.money();
+    effect(() => {
+      const money = this.money();
+      const diff = money - previousMoney;
+      if(diff > 0) {
+        this.moneyWithTheseBuildings.update(value => value + diff);
+      }
+    });
   }
 
   public buyBox():void{
@@ -57,13 +83,11 @@ export class MainPageComponent {
   }
 
   public onEarn(value: number) {
-    this.money += value;
-    this.managementService.money = this.money;
+    this.money.update(prevValue => prevValue + value);
   }
 
   public onSpend(value: number) {
-    this.money -= value;
-    this.managementService.money = this.money;
+    this.money.update(prevValue => prevValue - value);
   }
 
   public onDeleteBuilding(event: { building: Building; amount: number }) {

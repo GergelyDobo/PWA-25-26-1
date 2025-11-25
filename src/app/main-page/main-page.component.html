@@ -1,4 +1,6 @@
-<p id="money-display">{{ money | formatMoney }}</p>
+<p id="money-display">{{ money() | formatMoney }}</p>
+<p>Money until win: {{ moneyLeft() | formatMoney}}</p>
+<p>Money with these buildings: {{ moneyWithTheseBuildings() | formatMoney }}</p>
 <p>
   <img
     appClickToEarn
@@ -8,10 +10,8 @@
   />
 </p>
 
-@let buildings = (buildings$ | async) ?? [];
-
 <div class="buildings-container">
-  @for(b of buildings; track $index){
+  @for(b of buildings(); track $index){
     <app-building
       [building]="b"
       [(money)]="money"
@@ -30,7 +30,7 @@
 <button
   mat-flat-button
   class="create"
-  [disabled]="buildings.length >= 5"
+  [disabled]="buildings().length >= 5"
   (click)="createBuilding()"
 >
   Create building
